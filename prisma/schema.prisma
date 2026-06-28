@@ -12,6 +12,15 @@ enum Role {
   USER
 }
 
+enum AuditAction {
+  LOGIN
+  REGISTER
+  CREATE_ITEM
+  UPDATE_ITEM
+  DELETE_ITEM
+  RESTORE_ITEM
+}
+
 model User {
   id        Int      @id @default(autoincrement())
   username  String   @unique
@@ -21,15 +30,33 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  createdItems Item[] @relation("CreatedBy")
-  updatedItems Item[] @relation("UpdatedBy")
+  // Relationships
+  createdItems Item[]     @relation("CreatedBy")
+  updatedItems Item[]     @relation("UpdatedBy")
+  auditLogs    AuditLog[]
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  items Item[]
 }
 
 model Item {
   id          Int      @id @default(autoincrement())
-  itemName    String
+
+  sku         String   @unique
+  name        String
+  description String?
+
   quantity    Int
-  storedDate  DateTime
+
+  receivedAt  DateTime
 
   isActive    Boolean  @default(true)
   inactiveAt  DateTime?
@@ -37,12 +64,34 @@ model Item {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // User Relationships
   createdById Int
   updatedById Int?
 
   createdBy User  @relation("CreatedBy", fields: [createdById], references: [id])
   updatedBy User? @relation("UpdatedBy", fields: [updatedById], references: [id])
 
-  @@index([itemName])
+  // Category Relationship
+  categoryId Int
+  category   Category @relation(fields: [categoryId], references: [id])
+
+  @@index([name])
+  @@index([sku])
   @@index([isActive])
+}
+
+model AuditLog {
+  id          Int           @id @default(autoincrement())
+  action      AuditAction
+  tableName   String
+  recordId    Int
+  details     Json?
+  performedAt DateTime      @default(now())
+
+  userId      Int
+  user        User          @relation(fields: [userId], references: [id])
+
+  @@index([action])
+  @@index([tableName])
+  @@index([performedAt])
 }
