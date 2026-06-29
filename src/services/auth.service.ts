@@ -1,1 +1,7 @@
-export class AuthService {}
+import { UserRepository } from "../repositories/user.repository";
+
+export class AuthService {
+  constructor(
+    private readonly userRepository: UserRepository
+  ) {}
+}

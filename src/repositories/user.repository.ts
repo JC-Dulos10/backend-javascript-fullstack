@@ -1,4 +1,5 @@
 import prisma from "../config/prisma";
+import { RegisterDto } from "../dto/auth/register.dto";
 
 export class UserRepository {
   async findByUsername(username: string) {
@@ -9,11 +10,15 @@ export class UserRepository {
     });
   }
 
-  async create(data: {
-    username: string;
-    password: string;
-    role: "ADMIN" | "USER";
-  }) {
+  async findById(id: number) {
+    return prisma.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
+
+  async create(data: RegisterDto) {
     return prisma.user.create({
       data,
     });
