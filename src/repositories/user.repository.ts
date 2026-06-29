@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import { RegisterDto } from "../dto/auth/register.dto";
+import { CreateUserDto } from "../dto/auth/create-user.dto";
 
 export class UserRepository {
   async findByUsername(username: string) {
@@ -18,9 +18,9 @@ export class UserRepository {
     });
   }
 
-  async create(data: RegisterDto) {
+  async create(data: CreateUserDto) {
     return prisma.user.create({
-      data,
+        data,
     });
   }
 }
