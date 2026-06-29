@@ -6,7 +6,7 @@ import { UserResponseDto } from "../dto/auth/user-response.dto";
 
 import { ConflictError } from "../errors/ConflictError";
 
-import { PasswordUtil } from "../utils/password";
+import { PasswordUtil } from "../security/password";
 
 import { UserRepository } from "../repositories/user.repository";
 
