@@ -1,0 +1,1 @@
+export type ValidationTarget = "body" | "params" | "query";
