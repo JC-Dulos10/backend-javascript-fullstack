@@ -1,5 +1,5 @@
 import prisma from "../config/prisma";
-import { PrismaTransaction } from "./prima.types";
+import { PrismaTransaction } from "./prisma.types";
 
 export class TransactionService {
 

@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// Validation rules for the registration endpoint.
 export const registerSchema = z.object({
   username: z
     .string()

@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerSchema = void 0;
 const zod_1 = require("zod");
+// Validation rules for the registration endpoint.
 exports.registerSchema = zod_1.z.object({
     username: zod_1.z
         .string()

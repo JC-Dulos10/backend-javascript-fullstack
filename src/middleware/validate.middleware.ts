@@ -13,6 +13,7 @@ export function validate(
     next: NextFunction
   ) => {
 
+    // Validate the incoming payload before it reaches the controller/service layer.
     const result = schema.safeParse(req[target]);
 
     if (!result.success) {

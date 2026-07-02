@@ -1,5 +1,6 @@
 import "dotenv/config";
 
+// Centralize environment variables so the rest of the app reads them consistently.
 export const env = {
   PORT: process.env.PORT ?? "3000",
 

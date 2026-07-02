@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.env = void 0;
 require("dotenv/config");
+// Centralize environment variables so the rest of the app reads them consistently.
 exports.env = {
     PORT: process.env.PORT ?? "3000",
     DATABASE_URL: process.env.DATABASE_URL,

@@ -124,8 +124,8 @@ Features include:
 ## Security
 
 - ✅ Password Hashing (bcrypt)
-- 🚧 JWT Authentication
-- 🚧 Role-Based Authorization
+- ✅ JWT Authentication
+- ✅ Role-Based Authorization
 
 ---
 
@@ -485,12 +485,14 @@ Future versions will include sample inventory data for development.
 | Foundation | ✅ Complete |
 | Database | ✅ Complete |
 | Validation | ✅ Complete |
-| Authentication | 🚧 In Progress |
-| Authorization | 🚧 Planned |
-| Inventory CRUD | 🚧 Planned |
-| Audit Logs | 🚧 Planned |
-| Docker | 🚧 Planned |
-| Swagger | 🚧 Planned |
+| Authentication | ✅ Complete |
+| Authorization | ✅ Complete |
+| Inventory CRUD | ✅ Complete |
+| Categories | ✅ Complete |
+| Audit Logs | ✅ Complete |
+| Search & Pagination | ✅ Complete |
+| Docker | ✅ Complete |
+| Swagger | ✅ Complete |
 | Testing | 🚧 Planned |
 | AWS Deployment | 🚧 Planned |
 
@@ -514,7 +516,7 @@ Future versions will include sample inventory data for development.
 - JWT
 - Role Middleware
 
-🚧 In Progress
+✅ Completed
 
 ---
 
@@ -522,17 +524,23 @@ Future versions will include sample inventory data for development.
 
 - Inventory CRUD
 
+✅ Completed
+
 ---
 
 ## Phase 4
 
 - Categories
 
+✅ Completed
+
 ---
 
 ## Phase 5
 
 - Audit Logging
+
+✅ Completed
 
 ---
 
@@ -541,17 +549,23 @@ Future versions will include sample inventory data for development.
 - Search
 - Pagination
 
+✅ Completed
+
 ---
 
 ## Phase 7
 
 - Swagger Documentation
 
+✅ Completed
+
 ---
 
 ## Phase 8
 
 - Docker
+
+✅ Completed
 
 ---
 

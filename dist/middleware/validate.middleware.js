@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.validate = validate;
 function validate(schema, target = "body") {
     return (req, res, next) => {
+        // Validate the incoming payload before it reaches the controller/service layer.
         const result = schema.safeParse(req[target]);
         if (!result.success) {
             return res.status(400).json({
