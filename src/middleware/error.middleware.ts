@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AppError } from "../errors/AppError";
 
+// Catch application errors and return a consistent JSON response to the client.
 export function errorMiddleware(
   err: Error,
   req: Request,

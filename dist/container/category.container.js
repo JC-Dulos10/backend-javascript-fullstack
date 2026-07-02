@@ -1,0 +1,11 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const category_controller_1 = require("../controllers/category.controller");
+const category_repository_1 = require("../repositories/category.repository");
+const audit_repository_1 = require("../repositories/audit.repository");
+const category_service_1 = require("../services/category.service");
+const categoryRepository = new category_repository_1.CategoryRepository();
+const auditRepository = new audit_repository_1.AuditRepository();
+const categoryService = new category_service_1.CategoryService(categoryRepository, auditRepository);
+const categoryController = new category_controller_1.CategoryController(categoryService);
+exports.default = categoryController;

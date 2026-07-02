@@ -1,32 +1,37 @@
-import { PrismaClient, Role } from "@prisma/client";
-import prisma from "../config/prisma";
+import { BaseRepository } from "./base.repository";
 import { CreateUserDto } from "../dto/auth/create-user.dto";
+import { PrismaTransaction } from "../database/prisma.types";
 
-export class UserRepository {
+// User-specific database operations live in this repository.
+export class UserRepository extends BaseRepository {
+  /**
+   * Find a user by their unique username.
+   */
+  async findByUsername(username: string, tx?: PrismaTransaction) {
+    return this.getDb(tx).user.findUnique({
+      where: {
+        username,
+      },
+    });
+  }
 
-    async findByUsername(username: string) {
-        return prisma.user.findUnique({
-            where: {
-                username,
-            },
-        });
-    }
+  /**
+   * Find a user by their database identifier.
+   */
+  async findById(id: number, tx?: PrismaTransaction) {
+    return this.getDb(tx).user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 
-    async findById(id: number) {
-        return prisma.user.findUnique({
-            where: {
-                id,
-            },
-        });
-    }
-
-    async create(dto: CreateUserDto) {
-        return prisma.user.create({
-            data: {
-                username: dto.username,
-                password: dto.password,
-                role: dto.role,
-            },
-        });
-    }
+  /**
+   * Create a new user record.
+   */
+  async create(data: CreateUserDto, tx?: PrismaTransaction) {
+    return this.getDb(tx).user.create({
+      data,
+    });
+  }
 }
