@@ -27,7 +27,13 @@ export function validate(
       });
     }
 
-    req[target] = result.data;
+    // Express' `req.query` can be implemented as a getter-only property depending on the runtime/types.
+    // Avoid direct assignment; instead merge validated data into it.
+    if (target === 'query') {
+      Object.assign(req.query as any, result.data);
+    } else {
+      (req as any)[target] = result.data;
+    }
 
     next();
   };

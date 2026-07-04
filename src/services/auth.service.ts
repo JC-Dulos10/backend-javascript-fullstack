@@ -15,11 +15,23 @@ import { JwtUtil } from "../security/jwt";
 import { UserRepository } from "../repositories/user.repository";
 
 // The service layer contains the auth business rules and keeps the controller thin.
+// This layer is independent of HTTP and can be reused by other interfaces (CLI, gRPC, etc.)
 export class AuthService {
   constructor(private readonly userRepository: UserRepository) {}
 
   /**
    * Register a new user account and hash the supplied password.
+   * 
+   * Business logic:
+   * 1. Check if username already exists in database
+   * 2. If it does, throw a ConflictError (HTTP 409)
+   * 3. Hash the plaintext password using bcrypt
+   * 4. Create a new user record with role=USER
+   * 5. Return user data (without password hash) to caller
+   * 
+   * @param dto - Contains username and plaintext password
+   * @returns User data without password hash
+   * @throws ConflictError if username already exists
    */
   async register(dto: RegisterDto): Promise<UserResponseDto> {
     const existingUser = await this.userRepository.findByUsername(dto.username);
@@ -28,6 +40,7 @@ export class AuthService {
       throw new ConflictError("Username already exists.");
     }
 
+    // Hash password before storing in database
     const hashedPassword = await PasswordUtil.hash(dto.password);
 
     const newUser = new CreateUserDto(dto.username, hashedPassword, Role.USER);
@@ -38,6 +51,17 @@ export class AuthService {
 
   /**
    * Validate credentials and return a signed access token.
+   * 
+   * Business logic:
+   * 1. Find user by username
+   * 2. Compare supplied password with hashed password in database
+   * 3. If credentials invalid, throw UnauthorizedError
+   * 4. If valid, create a JWT token containing user identity and role
+   * 5. Return both user data and token to client
+   * 
+   * @param dto - Contains username and plaintext password
+   * @returns Object with user data and JWT token
+   * @throws UnauthorizedError if user not found or password incorrect
    */
   async login(dto: LoginDto): Promise<{ user: UserResponseDto; token: string }> {
     const existingUser = await this.userRepository.findByUsername(dto.username);
@@ -46,12 +70,15 @@ export class AuthService {
       throw new UnauthorizedError("Invalid username or password.");
     }
 
+    // Use bcrypt to compare plaintext password against stored hash
     const isPasswordValid = await PasswordUtil.compare(dto.password, existingUser.password);
 
     if (!isPasswordValid) {
       throw new UnauthorizedError("Invalid username or password.");
     }
 
+    // Create JWT token with user claims
+    // Token is used by client in Authorization header for subsequent requests
     const token = JwtUtil.sign({
       userId: existingUser.id,
       username: existingUser.username,
@@ -66,6 +93,13 @@ export class AuthService {
 
   /**
    * Return the profile of a currently authenticated user.
+   * 
+   * This endpoint requires a valid JWT token (verified in middleware).
+   * The middleware extracts userId from the token and passes it here.
+   * 
+   * @param userId - User ID extracted from JWT token
+   * @returns User profile data (without password hash)
+   * @throws NotFoundError if user no longer exists
    */
   async getProfile(userId: number): Promise<UserResponseDto> {
     const user = await this.userRepository.findById(userId);

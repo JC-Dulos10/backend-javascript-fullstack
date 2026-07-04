@@ -493,7 +493,7 @@ Future versions will include sample inventory data for development.
 | Search & Pagination | ✅ Complete |
 | Docker | ✅ Complete |
 | Swagger | ✅ Complete |
-| Testing | 🚧 Planned |
+| Testing | ✅ Complete |
 | AWS Deployment | 🚧 Planned |
 
 ---
@@ -571,11 +571,14 @@ Future versions will include sample inventory data for development.
 
 ## Phase 9
 
-- Unit Testing
+- ✅ Unit Testing (Jest)
+  - Added Jest unit tests for auth validation schemas (`loginSchema`)
+  - Added Jest integration tests for auth routes (register/login/me)
 
 ---
 
 ## Phase 10
+
 
 - AWS EC2 Deployment
 
