@@ -12,6 +12,8 @@
       "@/*": ["src/*"]
     },
     "ignoreDeprecations": "6.0",
+    "isolatedModules": true,
+    "types": ["node", "jest"],
 
     "strict": true,
 
