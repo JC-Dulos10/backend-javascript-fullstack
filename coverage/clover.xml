@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1783150879865" clover="3.2.0">
-  <project timestamp="1783150879866" name="All files">
+<coverage generated="1783156416416" clover="3.2.0">
+  <project timestamp="1783156416416" name="All files">
     <metrics statements="592" coveredstatements="413" conditionals="98" coveredconditionals="37" methods="100" coveredmethods="63" elements="790" coveredelements="513" complexity="0" loc="592" ncloc="592" packages="16" files="62" classes="62"/>
     <package name="src">
       <metrics statements="29" coveredstatements="24" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="1"/>
@@ -320,12 +320,12 @@
       <file name="category-response.dto.ts" path="D:\Projects\Javascript Fullstack Project\backend-javascript-fullstack\src\dto\category\category-response.dto.ts">
         <metrics statements="7" coveredstatements="7" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="2"/>
         <line num="1" count="3" type="stmt"/>
-        <line num="3" count="15" type="stmt"/>
-        <line num="4" count="15" type="stmt"/>
-        <line num="5" count="15" type="stmt"/>
-        <line num="6" count="15" type="stmt"/>
-        <line num="7" count="15" type="stmt"/>
-        <line num="11" count="15" type="stmt"/>
+        <line num="3" count="16" type="stmt"/>
+        <line num="4" count="16" type="stmt"/>
+        <line num="5" count="16" type="stmt"/>
+        <line num="6" count="16" type="stmt"/>
+        <line num="7" count="16" type="stmt"/>
+        <line num="11" count="16" type="stmt"/>
       </file>
       <file name="create-category.dto.ts" path="D:\Projects\Javascript Fullstack Project\backend-javascript-fullstack\src\dto\category\create-category.dto.ts">
         <metrics statements="3" coveredstatements="3" conditionals="0" coveredconditionals="0" methods="1" coveredmethods="1"/>
@@ -678,7 +678,7 @@
         <line num="15" count="3" type="stmt"/>
         <line num="16" count="3" type="stmt"/>
         <line num="23" count="1" type="stmt"/>
-        <line num="24" count="14" type="stmt"/>
+        <line num="24" count="15" type="stmt"/>
         <line num="31" count="0" type="stmt"/>
         <line num="33" count="0" type="cond" truecount="0" falsecount="1"/>
         <line num="34" count="0" type="stmt"/>
