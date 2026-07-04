@@ -4,7 +4,7 @@
 
 A production-inspired Inventory Management REST API built with **Node.js**, **Express**, **TypeScript**, **PostgreSQL**, and **Prisma ORM**.
 
-Designed with enterprise backend architecture including layered design, dependency injection, DTOs, validation, authentication, role-based authorization, audit logging, and AWS deployment.
+Designed with enterprise backend architecture including layered design, dependency injection, DTOs, validation, authentication, role-based authorization, audit logging, and Render deployment.
 
 > 🚧 Currently under active development.
 
@@ -86,7 +86,7 @@ Features include:
 - Docker Support
 - Swagger Documentation
 - Unit Testing
-- AWS Deployment
+- Render Deployment
 - CI/CD
 
 ---
@@ -169,9 +169,9 @@ PostgreSQL
 | Prisma ORM | Database ORM |
 | Zod | Request Validation |
 | bcrypt | Password Hashing |
-| JWT | Authentication (Upcoming) |
-| Docker | Containerization (Upcoming) |
-| AWS EC2 | Deployment (Upcoming) |
+| JWT | Authentication |
+| Docker | Containerization |
+| Render | Deployment |
 
 ---
 
@@ -393,6 +393,13 @@ DELETE /api/categories/:id
 GET /api/audit
 ```
 
+## Docs / Swagger
+
+```
+GET /api/docs
+GET /api/docs/swagger.json
+```
+
 ---
 
 # ⚙ Installation
@@ -494,7 +501,7 @@ Future versions will include sample inventory data for development.
 | Docker | ✅ Complete |
 | Swagger | ✅ Complete |
 | Testing | ✅ Complete |
-| AWS Deployment | 🚧 Planned |
+| Render Deployment | ✅ Complete |
 
 ---
 
@@ -581,8 +588,9 @@ Future versions will include sample inventory data for development.
 
 ## Phase 10
 
+- ✅ Render Deployment
 
-- AWS EC2 Deployment
+Deployment base URL: https://backend-javascript-fullstack.onrender.com/
 
 ---
 
@@ -603,6 +611,7 @@ Future versions will include sample inventory data for development.
 - Monitoring
 - Logging Dashboard
 - Kubernetes Deployment
+- AWS/Azure/Google Cloud Deployment
 
 ---
 
@@ -618,4 +627,22 @@ https://github.com/JC-Dulos10
 
 ---
 
+# Render Free-Tier Note
+If your Render service is not responding (or the browser shows an unavailable page), wait ~1 minute and try again. Free-tier Render instances can sleep between requests.
+
+You can check availability using:
+- GET /health
+
+Reload / retry after a minute once the server is back online.
+
+## Deployed base URL
+- Base: https://backend-javascript-fullstack.onrender.com/
+
+---
+
+
+
+
+
 ⭐ If you find this project interesting, consider giving it a star!
+
