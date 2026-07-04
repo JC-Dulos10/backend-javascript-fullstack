@@ -571,9 +571,11 @@ Future versions will include sample inventory data for development.
 
 ## Phase 9
 
-- ✅ Unit Testing (Jest)
-  - Added Jest unit tests for auth validation schemas (`loginSchema`)
-  - Added Jest integration tests for auth routes (register/login/me)
+- ✅ Unit + Integration Testing (Jest)
+  - ✅ Unit tests: auth.validator schemas (`auth.validator.spec.ts`)
+  - ✅ Integration tests: auth routes + inventory/category routes
+  - ✅ Negative tests added (missing/invalid token, validation failures, non-admin role enforcement)
+
 
 ---
 
