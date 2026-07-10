@@ -7,6 +7,65 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id           Int        @id @default(autoincrement())
+  username     String     @unique
+  password     String
+  role         Role       @default(USER)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  auditLogs    AuditLog[]
+  createdItems Item[]     @relation("CreatedBy")
+  updatedItems Item[]     @relation("UpdatedBy")
+}
+
+model Category {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  items       Item[]
+}
+
+model Item {
+  id          Int       @id @default(autoincrement())
+  quantity    Int
+  isActive    Boolean   @default(true)
+  inactiveAt  DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  createdById Int
+  updatedById Int?
+  categoryId  Int
+  description String?
+  name        String
+  receivedAt  DateTime
+  sku         String    @unique
+  category    Category  @relation(fields: [categoryId], references: [id])
+  createdBy   User      @relation("CreatedBy", fields: [createdById], references: [id])
+  updatedBy   User?     @relation("UpdatedBy", fields: [updatedById], references: [id])
+
+  @@index([name])
+  @@index([sku])
+  @@index([isActive])
+}
+
+model AuditLog {
+  id          Int         @id @default(autoincrement())
+  tableName   String
+  recordId    Int
+  details     Json?
+  performedAt DateTime    @default(now())
+  userId      Int
+  action      AuditAction
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@index([action])
+  @@index([tableName])
+  @@index([performedAt])
+}
+
 enum Role {
   ADMIN
   USER
@@ -19,79 +78,4 @@ enum AuditAction {
   UPDATE_ITEM
   DELETE_ITEM
   RESTORE_ITEM
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  password  String
-  role      Role     @default(USER)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relationships
-  createdItems Item[]     @relation("CreatedBy")
-  updatedItems Item[]     @relation("UpdatedBy")
-  auditLogs    AuditLog[]
-}
-
-model Category {
-  id          Int      @id @default(autoincrement())
-  name        String   @unique
-  description String?
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  items Item[]
-}
-
-model Item {
-  id          Int      @id @default(autoincrement())
-
-  sku         String   @unique
-  name        String
-  description String?
-
-  quantity    Int
-
-  receivedAt  DateTime
-
-  isActive    Boolean  @default(true)
-  inactiveAt  DateTime?
-
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  // User Relationships
-  createdById Int
-  updatedById Int?
-
-  createdBy User  @relation("CreatedBy", fields: [createdById], references: [id])
-  updatedBy User? @relation("UpdatedBy", fields: [updatedById], references: [id])
-
-  // Category Relationship
-  categoryId Int
-  category   Category @relation(fields: [categoryId], references: [id])
-
-  @@index([name])
-  @@index([sku])
-  @@index([isActive])
-}
-
-model AuditLog {
-  id          Int           @id @default(autoincrement())
-  action      AuditAction
-  tableName   String
-  recordId    Int
-  details     Json?
-  performedAt DateTime      @default(now())
-
-  userId      Int
-  user        User          @relation(fields: [userId], references: [id])
-
-  @@index([action])
-  @@index([tableName])
-  @@index([performedAt])
 }
