@@ -11,9 +11,15 @@ async function main() {
 
     console.log("Starting database seed...");
 
-    await seedAdmin();
-
-    await seedCategories();
+    // If migrations were not applied yet, the DB tables may not exist.
+    // Fail fast with a clearer message.
+    try {
+        await seedAdmin();
+        await seedCategories();
+    } catch (err: any) {
+        console.error("Seed failed. Most commonly: run `npx prisma migrate dev` (or ensure migrations are applied) before seeding.");
+        throw err;
+    }
 
     console.log("");
 
