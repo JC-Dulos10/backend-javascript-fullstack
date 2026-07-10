@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerSchema = void 0;
+exports.loginSchema = exports.registerSchema = void 0;
 const zod_1 = require("zod");
 // Validation rules for the registration endpoint.
 exports.registerSchema = zod_1.z.object({
@@ -15,4 +15,14 @@ exports.registerSchema = zod_1.z.object({
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
         .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
         .regex(/[0-9]/, "Password must contain at least one number."),
+});
+// Validation rules for the login endpoint.
+//
+// IMPORTANT:
+// The existing unit tests (src/validators/__tests__/auth.validator.spec.ts) import
+// `loginSchema` and expect it to be *less strict than registration*.
+// So for login we only enforce basic shape + minimal length constraints.
+exports.loginSchema = zod_1.z.object({
+    username: zod_1.z.string().trim().min(3, "Username must be at least 3 characters."),
+    password: zod_1.z.string().min(8, "Password must be at least 8 characters."),
 });
