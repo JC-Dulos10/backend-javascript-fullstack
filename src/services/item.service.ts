@@ -19,22 +19,25 @@ export class ItemService {
   ) {}
 
   /**
-   * Return a paginated list of items, optionally filtered by a search term.
+   * Return a paginated list of items, optionally filtered by search term and category.
    */
-  async listItems(params: { page: number; limit: number; search?: string }) {
+  async listItems(params: { page: number; limit: number; search?: string; categoryId?: number }) {
     const page = Math.max(1, params.page ?? 1);
     const limit = Math.max(1, Math.min(100, params.limit ?? 10));
     const skip = (page - 1) * limit;
 
-    const where = params.search
-      ? {
-          OR: [
-            { name: { contains: params.search, mode: "insensitive" as const } },
-            { sku: { contains: params.search, mode: "insensitive" as const } },
-            { description: { contains: params.search, mode: "insensitive" as const } },
-          ],
-        }
-      : undefined;
+    const where = {
+      ...(params.categoryId ? { categoryId: params.categoryId } : {}),
+      ...(params.search
+        ? {
+            OR: [
+              { name: { contains: params.search, mode: "insensitive" as const } },
+              { sku: { contains: params.search, mode: "insensitive" as const } },
+              { description: { contains: params.search, mode: "insensitive" as const } },
+            ],
+          }
+        : {}),
+    };
 
     const [items, total] = await Promise.all([
       this.itemRepository.findMany({

@@ -1,3 +1,4 @@
+import { AuditAction } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
 
 import { AuditService } from "../services/audit.service";
@@ -8,9 +9,12 @@ export class AuditController {
   /**
    * List recent audit log entries.
    */
-  list = async (_req: Request, res: Response, next: NextFunction) => {
+  list = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const logs = await this.auditService.listAuditLogs();
+      const action = typeof req.query.action === "string"
+        ? req.query.action as AuditAction
+        : undefined;
+      const logs = await this.auditService.listAuditLogs(action);
 
       return res.status(200).json({
         success: true,

@@ -6,4 +6,5 @@ exports.paginationSchema = zod_1.z.object({
     page: zod_1.z.coerce.number().default(1),
     limit: zod_1.z.coerce.number().default(10),
     search: zod_1.z.string().optional(),
+    categoryId: zod_1.z.coerce.number().int().positive().optional(),
 });

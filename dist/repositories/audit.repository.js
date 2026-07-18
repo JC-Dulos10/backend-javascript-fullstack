@@ -17,8 +17,9 @@ class AuditRepository extends base_repository_1.BaseRepository {
     /**
      * List audit logs in reverse chronological order.
      */
-    async findMany() {
+    async findMany(action) {
         return this.getDb().auditLog.findMany({
+            where: action ? { action } : undefined,
             orderBy: { performedAt: "desc" },
             include: {
                 user: { select: { id: true, username: true, role: true } },

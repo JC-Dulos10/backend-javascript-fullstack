@@ -169,5 +169,13 @@ describe('Inventory + Category Endpoints Integration', () => {
         const searchNames = searchItems.map((i) => i.name?.toLowerCase?.() ?? '');
         const matchedApple = searchNames.some((n) => n.includes('apple'));
         expect(matchedApple).toBe(true);
+        // Step 6: Category filter returns only items in the selected category.
+        const categoryResponse = await (0, supertest_1.default)(app)
+            .get('/api/items')
+            .set('Authorization', `Bearer ${token}`)
+            .query({ page: 1, limit: 10, categoryId });
+        expect(categoryResponse.status).toBe(200);
+        expect(categoryResponse.body.data.data.length).toBeGreaterThanOrEqual(3);
+        expect(categoryResponse.body.data.data.every((item) => item.categoryId === categoryId)).toBe(true);
     });
 });
