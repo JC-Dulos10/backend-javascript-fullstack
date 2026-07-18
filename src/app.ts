@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes";
 import itemRoutes from "./routes/item.routes";
 import categoryRoutes from "./routes/category.routes";
 import auditRoutes from "./routes/audit.routes";
+import userRoutes from "./routes/user.routes";
 import docsRoutes from "./routes/docs.routes";
 import { notFoundMiddleware } from "./middleware/notFound.middleware";
 import { errorMiddleware } from "./middleware/error.middleware";
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/audit", auditRoutes);
+app.use("/api/users", userRoutes);
 app.use("/api/docs", docsRoutes);
 
 
