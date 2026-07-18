@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginSchema = exports.registerSchema = void 0;
 const zod_1 = require("zod");
+const client_1 = require("@prisma/client");
 // Validation rules for the registration endpoint.
 exports.registerSchema = zod_1.z.object({
     username: zod_1.z
@@ -15,6 +16,7 @@ exports.registerSchema = zod_1.z.object({
         .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
         .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
         .regex(/[0-9]/, "Password must contain at least one number."),
+    role: zod_1.z.nativeEnum(client_1.Role),
 });
 // Validation rules for the login endpoint.
 //

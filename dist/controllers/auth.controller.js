@@ -13,8 +13,15 @@ class AuthController {
      */
     register = async (req, res, next) => {
         try {
-            const dto = new register_dto_1.RegisterDto(req.body.username, req.body.password);
-            const user = await this.authService.register(dto);
+            const authenticatedUser = req.user;
+            if (!authenticatedUser) {
+                return res.status(401).json({
+                    success: false,
+                    message: "Authentication token is required.",
+                });
+            }
+            const dto = new register_dto_1.RegisterDto(req.body.username, req.body.password, req.body.role);
+            const user = await this.authService.register(dto, authenticatedUser.userId);
             return res.status(201).json({
                 success: true,
                 message: "User registered successfully.",

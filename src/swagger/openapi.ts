@@ -38,10 +38,11 @@ export const swaggerDocument = {
       },
       RegisterRequest: {
         type: "object",
-        required: ["username", "password"],
+        required: ["username", "password", "role"],
         properties: {
           username: { type: "string", minLength: 3, example: "demouser" },
           password: { type: "string", minLength: 8, example: "Demo1234" },
+          role: { type: "string", enum: ["ADMIN", "USER"], example: "USER" },
         },
       },
       LoginRequest: {
@@ -78,7 +79,8 @@ export const swaggerDocument = {
     "/api/auth/register": {
       post: {
         tags: ["Auth"],
-        summary: "Register a new user",
+        summary: "Register a new user (admin only)",
+        security: [{ bearerAuth: [] }],
         requestBody: {
           required: true,
           content: {
@@ -90,6 +92,8 @@ export const swaggerDocument = {
         responses: {
           "201": { description: "User registered successfully" },
           "400": { description: "Validation failed" },
+          "401": { description: "Missing or invalid token" },
+          "403": { description: "Admin role required" },
         },
       },
     },

@@ -15,7 +15,7 @@ describe('Auth Validators', () => {
      */
     describe('registerSchema', () => {
         it('accepts valid registration input', () => {
-            const valid = { username: 'testuser', password: 'Password123' };
+            const valid = { username: 'testuser', password: 'Password123', role: 'USER' };
             const result = auth_validator_1.registerSchema.safeParse(valid);
             expect(result.success).toBe(true);
         });
@@ -46,12 +46,16 @@ describe('Auth Validators', () => {
             expect(result.success).toBe(false);
         });
         it('trims whitespace from username', () => {
-            const input = { username: '  testuser  ', password: 'Password123' };
+            const input = { username: '  testuser  ', password: 'Password123', role: 'USER' };
             const result = auth_validator_1.registerSchema.safeParse(input);
             expect(result.success).toBe(true);
             if (result.success) {
                 expect(result.data.username).toBe('testuser');
             }
+        });
+        it('rejects an unsupported role', () => {
+            const invalid = { username: 'testuser', password: 'Password123', role: 'MANAGER' };
+            expect(auth_validator_1.registerSchema.safeParse(invalid).success).toBe(false);
         });
     });
     /**

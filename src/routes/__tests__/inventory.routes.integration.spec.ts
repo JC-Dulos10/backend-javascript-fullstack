@@ -52,9 +52,17 @@ describe('Inventory + Category Endpoints Integration', () => {
     const username = 'user' + Date.now();
     const password = adminPassword;
 
+    const adminLoginResponse = await request(app)
+      .post('/api/auth/login')
+      .send({ username: env.ADMIN_USERNAME, password: env.ADMIN_PASSWORD ?? adminPassword });
+    const adminToken = adminLoginResponse.body?.data?.token;
+
+    expect(adminToken).toBeTruthy();
+
     const registerResponse = await request(app)
       .post('/api/auth/register')
-      .send({ username, password });
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ username, password, role: 'USER' });
 
     // Must succeed to have a user to test with
     expect(registerResponse.status).toBe(201);
