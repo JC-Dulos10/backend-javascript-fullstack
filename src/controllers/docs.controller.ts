@@ -16,7 +16,7 @@ export class DocsController {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Inventory API Swagger</title>
+    <title>Inventory Management API Documentation</title>
     <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
     <style>
       body { margin: 0; background: #fafafa; }
@@ -32,6 +32,8 @@ export class DocsController {
           url: '/api/docs/swagger.json',
           dom_id: '#swagger-ui',
           deepLinking: true,
+          persistAuthorization: true,
+          displayRequestDuration: true,
           presets: [SwaggerUIBundle.presets.apis],
         });
       };

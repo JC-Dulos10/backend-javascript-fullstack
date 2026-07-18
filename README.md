@@ -89,6 +89,12 @@ Features include:
 - Render Deployment
 - CI/CD
 
+Recent API additions:
+
+- Admin-only user registration with an explicit `ADMIN` or `USER` role
+- Audit records for successful logins and user registrations
+- Item filtering by category and audit-log filtering by action
+
 ---
 
 # ✨ Current Features
@@ -288,13 +294,33 @@ Authentication will use JSON Web Tokens (JWT).
 
 Features:
 
-- User Registration
+- Admin-Managed User Registration
 - User Login
 - JWT Access Tokens
 - Password Hashing
 - Protected Routes
 - Authentication Middleware
 - Refresh Tokens (Planned)
+
+## Registration workflow
+
+The seeded administrator creates user accounts. First log in as an administrator, then pass its JWT when registering a user.
+
+```http
+POST /api/auth/register
+Authorization: Bearer <admin-jwt>
+Content-Type: application/json
+
+{
+  "username": "newuser",
+  "password": "ValidPassword123",
+  "role": "USER"
+}
+```
+
+`role` must be `ADMIN` or `USER`. Anonymous and non-admin users cannot register accounts.
+
+Each successful login records a `LOGIN` audit entry. Each successful registration records a `REGISTER` entry attributed to the administrator who created the account.
 
 ---
 
@@ -304,6 +330,7 @@ Two user roles are supported.
 
 ## Administrator
 
+- Register user accounts with either supported role
 - Create Items
 - Update Items
 - Soft Delete Items
@@ -343,7 +370,7 @@ Custom error handling includes:
 
 ---
 
-# 📡 Planned API Endpoints
+# 📡 API Endpoints
 
 ## Authentication
 
@@ -354,12 +381,14 @@ GET    /api/auth/me
 POST   /api/auth/logout
 ```
 
+`POST /api/auth/register` requires an ADMIN JWT and `username`, `password`, and `role` in the request body.
+
 ---
 
 ## Inventory
 
 ```
-GET    /api/items
+GET    /api/items?categoryId=1&page=1&limit=10
 GET    /api/items/:id
 
 POST   /api/items
@@ -393,12 +422,24 @@ DELETE /api/categories/:id
 GET /api/audit
 ```
 
+Filter audit logs by action:
+
+```http
+GET /api/audit?action=LOGIN
+GET /api/audit?action=REGISTER
+GET /api/audit?action=CREATE_ITEM
+```
+
+Audit access requires an ADMIN JWT. Valid actions are `LOGIN`, `REGISTER`, `CREATE_ITEM`, `UPDATE_ITEM`, `DELETE_ITEM`, and `RESTORE_ITEM`.
+
 ## Docs / Swagger
 
 ```
 GET /api/docs
 GET /api/docs/swagger.json
 ```
+
+The interactive documentation is available at `GET /api/docs`. Use Swagger UI's **Authorize** button to provide a bearer JWT before calling protected endpoints.
 
 ---
 
@@ -645,4 +686,3 @@ Reload / retry after a minute once the server is back online.
 
 
 ⭐ If you find this project interesting, consider giving it a star!
-

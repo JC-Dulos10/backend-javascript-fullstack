@@ -5,7 +5,7 @@ export const swaggerDocument = {
     title: "Inventory Management API",
     version: "1.0.0",
     description:
-      "A production-inspired inventory management API with authentication, inventory CRUD, categories, audit logs, and role-based authorization.",
+      "Inventory API with JWT authentication, admin-managed account registration, category-filtered items, and action-filtered audit logs.",
   },
   servers: [
     {
@@ -14,7 +14,7 @@ export const swaggerDocument = {
     },
   ],
   tags: [
-    { name: "Auth", description: "User registration, login, and profile endpoints" },
+    { name: "Auth", description: "Admin-managed registration, login, and profile endpoints" },
     { name: "Items", description: "Inventory item management" },
     { name: "Categories", description: "Category management" },
     { name: "Audit", description: "Administrative activity logs" },
@@ -135,6 +135,7 @@ export const swaggerDocument = {
           { name: "page", in: "query", schema: { type: "integer" }, description: "Page number" },
           { name: "limit", in: "query", schema: { type: "integer" }, description: "Items per page" },
           { name: "search", in: "query", schema: { type: "string" }, description: "Search by name, SKU, or description" },
+          { name: "categoryId", in: "query", schema: { type: "integer", minimum: 1 }, description: "Filter by category ID" },
         ],
         responses: {
           "200": { description: "List of items" },
@@ -235,6 +236,7 @@ export const swaggerDocument = {
         ],
         responses: {
           "200": { description: "Audit log entries" },
+          "401": { description: "Missing or invalid token" },
           "403": { description: "Forbidden" },
         },
       },
