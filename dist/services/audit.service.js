@@ -8,10 +8,10 @@ class AuditService {
         this.auditRepository = auditRepository;
     }
     /**
-     * Return the latest audit log entries.
+     * Return the latest audit log entries, optionally filtered by action.
      */
-    async listAuditLogs() {
-        const logs = await this.auditRepository.findMany();
+    async listAuditLogs(action) {
+        const logs = await this.auditRepository.findMany(action);
         return logs;
     }
 }

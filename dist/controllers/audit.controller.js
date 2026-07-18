@@ -9,9 +9,12 @@ class AuditController {
     /**
      * List recent audit log entries.
      */
-    list = async (_req, res, next) => {
+    list = async (req, res, next) => {
         try {
-            const logs = await this.auditService.listAuditLogs();
+            const action = typeof req.query.action === "string"
+                ? req.query.action
+                : undefined;
+            const logs = await this.auditService.listAuditLogs(action);
             return res.status(200).json({
                 success: true,
                 data: logs,

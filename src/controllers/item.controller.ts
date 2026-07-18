@@ -16,8 +16,11 @@ export class ItemController {
       const page = Number(req.query.page ?? 1);
       const limit = Number(req.query.limit ?? 10);
       const search = typeof req.query.search === "string" ? req.query.search : undefined;
+      const categoryId = typeof req.query.categoryId === "string"
+        ? Number(req.query.categoryId)
+        : undefined;
 
-      const result = await this.itemService.listItems({ page, limit, search });
+      const result = await this.itemService.listItems({ page, limit, search, categoryId });
 
       return res.status(200).json({
         success: true,

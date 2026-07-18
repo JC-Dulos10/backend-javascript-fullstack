@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">22.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/9</span>
+                <span class='fraction'>2/9</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/7</span>
+                <span class='fraction'>0/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.66% </span>
+                <span class="strong">22.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>6/9</span>
+                <span class='fraction'>2/9</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line low'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -161,22 +161,11 @@
 <a name='L96'></a><a href='#L96'>96</a>
 <a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -187,9 +176,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,7 +210,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -219,7 +219,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -265,14 +265,14 @@ export class ItemRepository extends BaseRepository {
   /**
    * List items with optional search, pagination, and related entities.
    */
-  async findMany(params: {
+<span class="fstat-no" title="function not covered" >  async </span>findMany(params: {
     where?: Prisma.ItemWhereInput;
     skip?: number;
     take?: number;
     orderBy?: Prisma.ItemOrderByWithRelationInput;
     include?: Prisma.ItemInclude;
   }) {
-    return this.getDb().item.findMany({
+<span class="cstat-no" title="statement not covered" >    return this.getDb().item.findMany({</span>
       where: params.where,
       skip: params.skip,
       take: params.take,
@@ -284,8 +284,8 @@ export class ItemRepository extends BaseRepository {
   /**
    * Count items that match the supplied filters.
    */
-  async count(where?: Prisma.ItemWhereInput) {
-    return this.getDb().item.count({ where });
+<span class="fstat-no" title="function not covered" >  async </span>count(where?: Prisma.ItemWhereInput) {
+<span class="cstat-no" title="statement not covered" >    return this.getDb().item.count({ where });</span>
   }
 &nbsp;
   /**
@@ -305,8 +305,8 @@ export class ItemRepository extends BaseRepository {
   /**
    * Find an item by its unique SKU.
    */
-  async findBySku(sku: string) {
-    return this.getDb().item.findUnique({
+<span class="fstat-no" title="function not covered" >  async </span>findBySku(sku: string) {
+<span class="cstat-no" title="statement not covered" >    return this.getDb().item.findUnique({</span>
       where: { sku },
     });
   }
@@ -314,8 +314,8 @@ export class ItemRepository extends BaseRepository {
   /**
    * Create an item record.
    */
-  async create(data: Prisma.ItemCreateInput) {
-    return this.getDb().item.create({
+<span class="fstat-no" title="function not covered" >  async </span>create(data: Prisma.ItemCreateInput) {
+<span class="cstat-no" title="statement not covered" >    return this.getDb().item.create({</span>
       data,
       include: {
         category: true,
@@ -358,7 +358,7 @@ export class ItemRepository extends BaseRepository {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2026-07-04T09:13:35.532Z
+                at 2026-07-18T05:27:37.135Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

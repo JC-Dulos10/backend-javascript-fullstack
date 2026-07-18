@@ -218,8 +218,19 @@ exports.swaggerDocument = {
         "/api/audit": {
             get: {
                 tags: ["Audit"],
-                summary: "List audit logs",
+                summary: "List audit logs, optionally filtered by action",
                 security: [{ bearerAuth: [] }],
+                parameters: [
+                    {
+                        name: "action",
+                        in: "query",
+                        required: false,
+                        schema: {
+                            type: "string",
+                            enum: ["LOGIN", "REGISTER", "CREATE_ITEM", "UPDATE_ITEM", "DELETE_ITEM", "RESTORE_ITEM"],
+                        },
+                    },
+                ],
                 responses: {
                     "200": { description: "Audit log entries" },
                     "403": { description: "Forbidden" },

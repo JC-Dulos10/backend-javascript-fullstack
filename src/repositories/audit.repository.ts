@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { AuditAction, Prisma } from "@prisma/client";
 
 import { BaseRepository } from "./base.repository";
 
@@ -18,8 +18,9 @@ export class AuditRepository extends BaseRepository {
   /**
    * List audit logs in reverse chronological order.
    */
-  async findMany() {
+  async findMany(action?: AuditAction) {
     return this.getDb().auditLog.findMany({
+      where: action ? { action } : undefined,
       orderBy: { performedAt: "desc" },
       include: {
         user: { select: { id: true, username: true, role: true } },
