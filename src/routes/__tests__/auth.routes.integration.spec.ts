@@ -1,10 +1,21 @@
 import request from 'supertest';
+import { env } from '../../config/env';
 
 // The app is exported from src/app.ts.
 // Using `require(...).default` keeps compatibility with the codebase's TS/ESM setup.
 const app = require('../../app').default;
 
 describe('Auth Endpoints Integration', () => {
+  const adminPassword = 'ValidPassword123';
+
+  async function getAdminToken() {
+    const response = await request(app)
+      .post('/api/auth/login')
+      .send({ username: env.ADMIN_USERNAME, password: env.ADMIN_PASSWORD ?? adminPassword });
+
+    expect(response.status).toBe(200);
+    return response.body.data.token as string;
+  }
   // These are integration tests:
   // - They spin up the real Express app in-memory (no server listen)
   // - They hit real route handlers using supertest
@@ -17,12 +28,15 @@ describe('Auth Endpoints Integration', () => {
   describe('POST /api/auth/register', () => {
     it('successfully registers a new user with valid input', async () => {
       const username = 'newuser' + Date.now();
+      const token = await getAdminToken();
 
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           username,
           password: 'ValidPassword123',
+          role: 'USER',
         });
 
       expect(response.status).toBe(201);
@@ -33,10 +47,13 @@ describe('Auth Endpoints Integration', () => {
     });
 
     it('rejects registration with missing username', async () => {
+      const token = await getAdminToken();
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           password: 'ValidPassword123',
+          role: 'USER',
         });
 
       expect(response.status).toBe(400);
@@ -44,11 +61,14 @@ describe('Auth Endpoints Integration', () => {
     });
 
     it('rejects registration with password that lacks uppercase letter', async () => {
+      const token = await getAdminToken();
       const response = await request(app)
         .post('/api/auth/register')
+        .set('Authorization', `Bearer ${token}`)
         .send({
           username: 'anotheruser' + Date.now(),
           password: 'invalidpassword123',
+          role: 'USER',
         });
 
       expect(response.status).toBe(400);
@@ -62,14 +82,17 @@ describe('Auth Endpoints Integration', () => {
       // So we accept either status as long as `success` is false.
 
       const username = 'duplicateuser' + Date.now();
+      const token = await getAdminToken();
 
       await request(app)
         .post('/api/auth/register')
-        .send({ username, password: 'ValidPassword123' });
+        .set('Authorization', `Bearer ${token}`)
+        .send({ username, password: 'ValidPassword123', role: 'USER' });
 
       const response = await request(app)
         .post('/api/auth/register')
-        .send({ username, password: 'ValidPassword123' });
+        .set('Authorization', `Bearer ${token}`)
+        .send({ username, password: 'ValidPassword123', role: 'USER' });
 
       // Depending on implementation, duplicate may be returned as 400 or 409.
       expect([400, 409]).toContain(response.status);
@@ -81,11 +104,13 @@ describe('Auth Endpoints Integration', () => {
   describe('POST /api/auth/login', () => {
     it('successfully logs in with valid credentials', async () => {
       const testUsername = 'meuser' + Date.now();
+      const token = await getAdminToken();
 
 
       await request(app)
         .post('/api/auth/register')
-        .send({ username: testUsername, password: 'ValidPassword123' });
+        .set('Authorization', `Bearer ${token}`)
+        .send({ username: testUsername, password: 'ValidPassword123', role: 'USER' });
 
       const response = await request(app)
         .post('/api/auth/login')
@@ -145,10 +170,12 @@ describe('Auth Endpoints Integration', () => {
       // We assert on the stable fields (username/id) instead of exact nesting.
 
       const username = 'meuser2' + Date.now();
+      const adminToken = await getAdminToken();
 
       await request(app)
         .post('/api/auth/register')
-        .send({ username, password: 'ValidPassword123' });
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ username, password: 'ValidPassword123', role: 'USER' });
 
       const loginResponse = await request(app)
         .post('/api/auth/login')

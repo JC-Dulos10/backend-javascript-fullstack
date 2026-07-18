@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Role } from "@prisma/client";
 
 // Validation rules for the registration endpoint.
 export const registerSchema = z.object({
@@ -14,6 +15,8 @@ export const registerSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter.")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter.")
     .regex(/[0-9]/, "Password must contain at least one number."),
+
+  role: z.nativeEnum(Role),
 });
 
 // Validation rules for the login endpoint.

@@ -13,8 +13,10 @@ const jwt_1 = require("../security/jwt");
 // This layer is independent of HTTP and can be reused by other interfaces (CLI, gRPC, etc.)
 class AuthService {
     userRepository;
-    constructor(userRepository) {
+    auditRepository;
+    constructor(userRepository, auditRepository) {
         this.userRepository = userRepository;
+        this.auditRepository = auditRepository;
     }
     /**
      * Register a new user account and hash the supplied password.
@@ -23,22 +25,29 @@ class AuthService {
      * 1. Check if username already exists in database
      * 2. If it does, throw a ConflictError (HTTP 409)
      * 3. Hash the plaintext password using bcrypt
-     * 4. Create a new user record with role=USER
+     * 4. Create a new user record with the administrator-selected role
      * 5. Return user data (without password hash) to caller
      *
-     * @param dto - Contains username and plaintext password
+     * @param dto - Contains username, plaintext password, and role
      * @returns User data without password hash
      * @throws ConflictError if username already exists
      */
-    async register(dto) {
+    async register(dto, createdByUserId) {
         const existingUser = await this.userRepository.findByUsername(dto.username);
         if (existingUser) {
             throw new ConflictError_1.ConflictError("Username already exists.");
         }
         // Hash password before storing in database
         const hashedPassword = await password_1.PasswordUtil.hash(dto.password);
-        const newUser = new create_user_dto_1.CreateUserDto(dto.username, hashedPassword, client_1.Role.USER);
+        const newUser = new create_user_dto_1.CreateUserDto(dto.username, hashedPassword, dto.role);
         const user = await this.userRepository.create(newUser);
+        await this.auditRepository.create({
+            action: client_1.AuditAction.REGISTER,
+            tableName: "User",
+            recordId: user.id,
+            details: { username: user.username, role: user.role },
+            user: { connect: { id: createdByUserId } },
+        });
         return user_response_dto_1.UserResponseDto.fromEntity(user);
     }
     /**
@@ -71,6 +80,13 @@ class AuthService {
             userId: existingUser.id,
             username: existingUser.username,
             role: existingUser.role,
+        });
+        await this.auditRepository.create({
+            action: client_1.AuditAction.LOGIN,
+            tableName: "User",
+            recordId: existingUser.id,
+            details: { username: existingUser.username },
+            user: { connect: { id: existingUser.id } },
         });
         return {
             user: user_response_dto_1.UserResponseDto.fromEntity(existingUser),

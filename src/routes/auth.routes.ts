@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import authController from "../container/auth.container";
 import { authMiddleware } from "../middleware/auth.middleware";
+import { roleMiddleware } from "../middleware/role.middleware";
 import { validate } from "../middleware/validate.middleware";
 import { registerSchema } from "../validators/auth.validator";
 import { loginSchema } from "../validators/login.validator";
@@ -12,6 +13,8 @@ const router = Router();
 // Register a new account.
 router.post(
   "/register",
+  authMiddleware,
+  roleMiddleware(["ADMIN"]),
   validate(registerSchema, "body"),
   authController.register
 );

@@ -4,10 +4,19 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
+const env_1 = require("../../config/env");
 // The app is exported from src/app.ts.
 // Using `require(...).default` keeps compatibility with the codebase's TS/ESM setup.
 const app = require('../../app').default;
 describe('Auth Endpoints Integration', () => {
+    const adminPassword = 'ValidPassword123';
+    async function getAdminToken() {
+        const response = await (0, supertest_1.default)(app)
+            .post('/api/auth/login')
+            .send({ username: env_1.env.ADMIN_USERNAME, password: env_1.env.ADMIN_PASSWORD ?? adminPassword });
+        expect(response.status).toBe(200);
+        return response.body.data.token;
+    }
     // These are integration tests:
     // - They spin up the real Express app in-memory (no server listen)
     // - They hit real route handlers using supertest
@@ -19,11 +28,14 @@ describe('Auth Endpoints Integration', () => {
     describe('POST /api/auth/register', () => {
         it('successfully registers a new user with valid input', async () => {
             const username = 'newuser' + Date.now();
+            const token = await getAdminToken();
             const response = await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
+                .set('Authorization', `Bearer ${token}`)
                 .send({
                 username,
                 password: 'ValidPassword123',
+                role: 'USER',
             });
             expect(response.status).toBe(201);
             expect(response.body).toHaveProperty('data');
@@ -32,20 +44,26 @@ describe('Auth Endpoints Integration', () => {
             expect(response.body.data).not.toHaveProperty('password');
         });
         it('rejects registration with missing username', async () => {
+            const token = await getAdminToken();
             const response = await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
+                .set('Authorization', `Bearer ${token}`)
                 .send({
                 password: 'ValidPassword123',
+                role: 'USER',
             });
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('success', false);
         });
         it('rejects registration with password that lacks uppercase letter', async () => {
+            const token = await getAdminToken();
             const response = await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
+                .set('Authorization', `Bearer ${token}`)
                 .send({
                 username: 'anotheruser' + Date.now(),
                 password: 'invalidpassword123',
+                role: 'USER',
             });
             expect(response.status).toBe(400);
             expect(response.body).toHaveProperty('success', false);
@@ -56,12 +74,15 @@ describe('Auth Endpoints Integration', () => {
             // The important contract for this endpoint is: it must not succeed.
             // So we accept either status as long as `success` is false.
             const username = 'duplicateuser' + Date.now();
+            const token = await getAdminToken();
             await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
-                .send({ username, password: 'ValidPassword123' });
+                .set('Authorization', `Bearer ${token}`)
+                .send({ username, password: 'ValidPassword123', role: 'USER' });
             const response = await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
-                .send({ username, password: 'ValidPassword123' });
+                .set('Authorization', `Bearer ${token}`)
+                .send({ username, password: 'ValidPassword123', role: 'USER' });
             // Depending on implementation, duplicate may be returned as 400 or 409.
             expect([400, 409]).toContain(response.status);
             // Some implementations may use different error shapes; just ensure it is not successful.
@@ -71,9 +92,11 @@ describe('Auth Endpoints Integration', () => {
     describe('POST /api/auth/login', () => {
         it('successfully logs in with valid credentials', async () => {
             const testUsername = 'meuser' + Date.now();
+            const token = await getAdminToken();
             await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
-                .send({ username: testUsername, password: 'ValidPassword123' });
+                .set('Authorization', `Bearer ${token}`)
+                .send({ username: testUsername, password: 'ValidPassword123', role: 'USER' });
             const response = await (0, supertest_1.default)(app)
                 .post('/api/auth/login')
                 .send({ username: testUsername, password: 'ValidPassword123' });
@@ -121,9 +144,11 @@ describe('Auth Endpoints Integration', () => {
             // Response payload shape may differ slightly between DTO versions.
             // We assert on the stable fields (username/id) instead of exact nesting.
             const username = 'meuser2' + Date.now();
+            const adminToken = await getAdminToken();
             await (0, supertest_1.default)(app)
                 .post('/api/auth/register')
-                .send({ username, password: 'ValidPassword123' });
+                .set('Authorization', `Bearer ${adminToken}`)
+                .send({ username, password: 'ValidPassword123', role: 'USER' });
             const loginResponse = await (0, supertest_1.default)(app)
                 .post('/api/auth/login')
                 .send({ username, password: 'ValidPassword123' });

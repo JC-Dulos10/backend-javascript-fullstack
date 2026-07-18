@@ -7,7 +7,7 @@ exports.swaggerDocument = {
     info: {
         title: "Inventory Management API",
         version: "1.0.0",
-        description: "A production-inspired inventory management API with authentication, inventory CRUD, categories, audit logs, and role-based authorization.",
+        description: "Inventory API with JWT authentication, admin-managed account registration, category-filtered items, and action-filtered audit logs.",
     },
     servers: [
         {
@@ -16,7 +16,7 @@ exports.swaggerDocument = {
         },
     ],
     tags: [
-        { name: "Auth", description: "User registration, login, and profile endpoints" },
+        { name: "Auth", description: "Admin-managed registration, login, and profile endpoints" },
         { name: "Items", description: "Inventory item management" },
         { name: "Categories", description: "Category management" },
         { name: "Audit", description: "Administrative activity logs" },
@@ -40,10 +40,11 @@ exports.swaggerDocument = {
             },
             RegisterRequest: {
                 type: "object",
-                required: ["username", "password"],
+                required: ["username", "password", "role"],
                 properties: {
                     username: { type: "string", minLength: 3, example: "demouser" },
                     password: { type: "string", minLength: 8, example: "Demo1234" },
+                    role: { type: "string", enum: ["ADMIN", "USER"], example: "USER" },
                 },
             },
             LoginRequest: {
@@ -80,7 +81,8 @@ exports.swaggerDocument = {
         "/api/auth/register": {
             post: {
                 tags: ["Auth"],
-                summary: "Register a new user",
+                summary: "Register a new user (admin only)",
+                security: [{ bearerAuth: [] }],
                 requestBody: {
                     required: true,
                     content: {
@@ -92,6 +94,8 @@ exports.swaggerDocument = {
                 responses: {
                     "201": { description: "User registered successfully" },
                     "400": { description: "Validation failed" },
+                    "401": { description: "Missing or invalid token" },
+                    "403": { description: "Admin role required" },
                 },
             },
         },
@@ -133,6 +137,7 @@ exports.swaggerDocument = {
                     { name: "page", in: "query", schema: { type: "integer" }, description: "Page number" },
                     { name: "limit", in: "query", schema: { type: "integer" }, description: "Items per page" },
                     { name: "search", in: "query", schema: { type: "string" }, description: "Search by name, SKU, or description" },
+                    { name: "categoryId", in: "query", schema: { type: "integer", minimum: 1 }, description: "Filter by category ID" },
                 ],
                 responses: {
                     "200": { description: "List of items" },
@@ -233,6 +238,7 @@ exports.swaggerDocument = {
                 ],
                 responses: {
                     "200": { description: "Audit log entries" },
+                    "401": { description: "Missing or invalid token" },
                     "403": { description: "Forbidden" },
                 },
             },

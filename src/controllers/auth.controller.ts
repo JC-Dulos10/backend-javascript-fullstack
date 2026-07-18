@@ -13,8 +13,17 @@ export class AuthController {
    */
   register = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const dto = new RegisterDto(req.body.username, req.body.password);
-      const user = await this.authService.register(dto);
+      const authenticatedUser = (req as Request & { user?: JwtPayload }).user;
+
+      if (!authenticatedUser) {
+        return res.status(401).json({
+          success: false,
+          message: "Authentication token is required.",
+        });
+      }
+
+      const dto = new RegisterDto(req.body.username, req.body.password, req.body.role);
+      const user = await this.authService.register(dto, authenticatedUser.userId);
 
       return res.status(201).json({
         success: true,

@@ -42,9 +42,15 @@ describe('Inventory + Category Endpoints Integration', () => {
     it('POST /api/categories rejects non-admin user (403)', async () => {
         const username = 'user' + Date.now();
         const password = adminPassword;
+        const adminLoginResponse = await (0, supertest_1.default)(app)
+            .post('/api/auth/login')
+            .send({ username: env_1.env.ADMIN_USERNAME, password: env_1.env.ADMIN_PASSWORD ?? adminPassword });
+        const adminToken = adminLoginResponse.body?.data?.token;
+        expect(adminToken).toBeTruthy();
         const registerResponse = await (0, supertest_1.default)(app)
             .post('/api/auth/register')
-            .send({ username, password });
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({ username, password, role: 'USER' });
         // Must succeed to have a user to test with
         expect(registerResponse.status).toBe(201);
         const loginResponse = await (0, supertest_1.default)(app)

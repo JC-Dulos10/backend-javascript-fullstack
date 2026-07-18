@@ -6,13 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const auth_container_1 = __importDefault(require("../container/auth.container"));
 const auth_middleware_1 = require("../middleware/auth.middleware");
+const role_middleware_1 = require("../middleware/role.middleware");
 const validate_middleware_1 = require("../middleware/validate.middleware");
 const auth_validator_1 = require("../validators/auth.validator");
 const login_validator_1 = require("../validators/login.validator");
 const router = (0, express_1.Router)();
 // Auth endpoints are grouped together so the app can expose a consistent API surface.
 // Register a new account.
-router.post("/register", (0, validate_middleware_1.validate)(auth_validator_1.registerSchema, "body"), auth_container_1.default.register);
+router.post("/register", auth_middleware_1.authMiddleware, (0, role_middleware_1.roleMiddleware)(["ADMIN"]), (0, validate_middleware_1.validate)(auth_validator_1.registerSchema, "body"), auth_container_1.default.register);
 // Sign in with a username and password to receive a JWT.
 router.post("/login", (0, validate_middleware_1.validate)(login_validator_1.loginSchema, "body"), auth_container_1.default.login);
 // Return the currently authenticated user's profile.
