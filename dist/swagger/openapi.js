@@ -20,6 +20,7 @@ exports.swaggerDocument = {
         { name: "Items", description: "Inventory item management" },
         { name: "Categories", description: "Category management" },
         { name: "Audit", description: "Administrative activity logs" },
+        { name: "Users", description: "Administrator-only user management" },
     ],
     components: {
         securitySchemes: {
@@ -73,6 +74,13 @@ exports.swaggerDocument = {
                 properties: {
                     name: { type: "string", example: "Electronics" },
                     description: { type: "string", nullable: true, example: "Electronic devices" },
+                },
+            },
+            UserListEntry: {
+                type: "object",
+                properties: {
+                    username: { type: "string", example: "demouser" },
+                    role: { type: "string", enum: ["ADMIN", "USER"], example: "USER" },
                 },
             },
         },
@@ -240,6 +248,38 @@ exports.swaggerDocument = {
                     "200": { description: "Audit log entries" },
                     "401": { description: "Missing or invalid token" },
                     "403": { description: "Forbidden" },
+                },
+            },
+        },
+        "/api/users": {
+            get: {
+                tags: ["Users"],
+                summary: "List users (admin only)",
+                description: "Returns paginated user entries containing only usernames and roles.",
+                security: [{ bearerAuth: [] }],
+                parameters: [
+                    { name: "page", in: "query", schema: { type: "integer", minimum: 1, default: 1 } },
+                    { name: "limit", in: "query", schema: { type: "integer", minimum: 1, maximum: 100, default: 10 } },
+                ],
+                responses: {
+                    "200": { description: "Paginated user list" },
+                    "401": { description: "Missing or invalid token" },
+                    "403": { description: "Admin role required" },
+                },
+            },
+        },
+        "/api/users/{id}": {
+            delete: {
+                tags: ["Users"],
+                summary: "Delete a user (admin only)",
+                security: [{ bearerAuth: [] }],
+                parameters: [{ name: "id", in: "path", required: true, schema: { type: "integer", minimum: 1 } }],
+                responses: {
+                    "200": { description: "User deleted" },
+                    "400": { description: "Cannot delete yourself or a user linked to inventory items" },
+                    "401": { description: "Missing or invalid token" },
+                    "403": { description: "Admin role required" },
+                    "404": { description: "User not found" },
                 },
             },
         },

@@ -10,6 +10,7 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const item_routes_1 = __importDefault(require("./routes/item.routes"));
 const category_routes_1 = __importDefault(require("./routes/category.routes"));
 const audit_routes_1 = __importDefault(require("./routes/audit.routes"));
+const user_routes_1 = __importDefault(require("./routes/user.routes"));
 const docs_routes_1 = __importDefault(require("./routes/docs.routes"));
 const notFound_middleware_1 = require("./middleware/notFound.middleware");
 const error_middleware_1 = require("./middleware/error.middleware");
@@ -23,6 +24,7 @@ app.use("/api/auth", auth_routes_1.default);
 app.use("/api/items", item_routes_1.default);
 app.use("/api/categories", category_routes_1.default);
 app.use("/api/audit", audit_routes_1.default);
+app.use("/api/users", user_routes_1.default);
 app.use("/api/docs", docs_routes_1.default);
 app.get("/health", (req, res) => {
     res.status(200).json({

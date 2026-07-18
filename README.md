@@ -432,6 +432,17 @@ GET /api/audit?action=CREATE_ITEM
 
 Audit access requires an ADMIN JWT. Valid actions are `LOGIN`, `REGISTER`, `CREATE_ITEM`, `UPDATE_ITEM`, `DELETE_ITEM`, and `RESTORE_ITEM`.
 
+---
+
+## Users (Admin only)
+
+```http
+GET    /api/users?page=1&limit=10
+DELETE /api/users/:id
+```
+
+User lists return only `id`, `username`, and `role`, along with pagination metadata. Administrators cannot delete their own account or accounts linked to inventory items.
+
 ## Docs / Swagger
 
 ```
